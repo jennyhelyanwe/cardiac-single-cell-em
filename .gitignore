@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+outputs/**/*.npz
+outputs/**/*.png
+!outputs/steady_states/*.npz
+.ipynb_checkpoints/
