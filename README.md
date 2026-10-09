@@ -1,9 +1,9 @@
 # single-cell-em: ToRORd-Land in Python
 
 A Python implementation of the ToRORd human ventricular cell model (Tomek et al. 2019)
-coupled to the Land contraction model (Land et al. 2017), as used in
-Margara et al. (2021). It simulates the action potential, calcium transient and active
-tension of a single cardiomyocyte.
+coupled to the Land contraction model (Land et al. 2017), as used in Margara et al. (2021).
+It simulates the action potential, calcium transient and active tension of a single
+cardiomyocyte.
 
 ## Install
 
@@ -15,30 +15,49 @@ cd cardiac-single-cell-em
 pip install -e .
 ```
 
-## Quickstart: control vs. reduced L-type calcium current
+## Getting started
 
-```python
-import matplotlib.pyplot as plt
-from single_cell_em.models.torord_land import get_starting_state, model_runner, get_currents_structure
-from single_cell_em.analysis.biomarkers import apd, tension_metrics
+Run the examples from the repository root, in order:
 
-fig, (ax_v, ax_ta) = plt.subplots(2, 1, sharex=True, figsize=(6, 6))
-for label, scale in [("control", 1.0), ("ICaL x 0.5", 0.5)]:
-    p = {"bcl": 1000.0, "cellType": 0, "ICaL_Multiplier": scale}
-    t, X, p = model_runner(get_starting_state("m_endo"), p, beats=20, ignore_first=19)
-    c = get_currents_structure(t, X, p)
-    m = tension_metrics(c["time"], c["Ta"])
-    print(f"{label}: APD90 = {apd(c['time'], c['V']):.0f} ms, peak Ta = {m['Ta_peak']:.1f} kPa")
-    ax_v.plot(c["time"], c["V"], label=label)
-    ax_ta.plot(c["time"], c["Ta"], label=label)
-ax_v.set_ylabel("Vm (mV)"); ax_ta.set_ylabel("Active tension (kPa)")
-ax_ta.set_xlabel("Time (ms)"); ax_v.legend()
-plt.tight_layout(); plt.show()
+```bash
+python examples/00_check_install.py
 ```
 
-Each run takes under a minute on a laptop. Twenty beats is enough for a first look,
-but check that your biomarkers have stopped changing before trusting them.
-More beats (e.g. 200) get you closer to steady state.
+This simulates two beats in a few seconds. You should see:
+
+```
+APD90 = 273 ms
+Peak active tension = 24.0 kPa
+```
+
+```bash
+python examples/01_quickstart.py
+```
+
+This compares a control cell with one where the L-type calcium current is halved,
+prints APD90 and peak tension for each, and plots the action potential and active
+tension. It takes one to two minutes.
+
+## Run to steady state before trusting results
+
+A cell model needs several beats to settle after you change something. Ion
+concentrations inside the cell (sodium, potassium, calcium in the SR) change slowly,
+and each beat shifts them a little until they reach a stable cycle. Results taken
+before then reflect the transition, not the new condition.
+
+The stored starting state (`get_starting_state`) is already at steady state for the
+default model at a 1000 ms cycle length. As soon as you change a conductance, the
+cycle length or the cell type, the model moves away from it.
+
+To check you have reached steady state:
+
+1. Run the model for an increasing number of beats (e.g. 20, 50, 100, 200).
+2. Record your biomarkers (APD90, peak tension) from the last beat of each run.
+3. Use the smallest number of beats after which they stop changing meaningfully
+   (e.g. less than 1% between runs).
+
+Do this once for each type of change you make, and report the number of beats
+you used.
 
 ## Changing the model
 
@@ -61,7 +80,8 @@ src/single_cell_em/
     protocols/   stretch (lambda) protocols
     analysis/    biomarkers: APD, tension metrics
     solvers/     fixed-step solver for coupling studies
-experiments/     example research scripts
+examples/        start here
+experiments/     research scripts (not needed to get started)
 ```
 
 ## References

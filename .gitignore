@@ -5,7 +5,7 @@ outputs/**/*.npz
 outputs/**/*.png
 !outputs/steady_states/*.npz
 .ipynb_checkpoints/
-.idea/
-src/single_cell_em.egg-info/
-data/
+.idea/*
+src/single_cell_em.egg-info/*
+data/*
 .DS_Store
