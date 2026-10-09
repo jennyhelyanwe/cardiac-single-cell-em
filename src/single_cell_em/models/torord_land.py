@@ -8,7 +8,6 @@ Reference: Tomek et al. (2019) ToR-ORd, Land et al. (2017) contraction model.
 
 Usage example
 -------------
-from torod_land import get_starting_state, model_runner, get_currents_structure
 
 X0 = get_starting_state('m_endo')
 parameters = {'bcl': 1000, 'model': model_ToRORd_Land}

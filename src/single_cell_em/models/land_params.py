@@ -60,4 +60,4 @@ LAND2017 = LandParams()
 # Fill these in once you have Xin's file. Keep his numbers here, nowhere else.
 XIN_RETUNED = replace(LAND2017)   # e.g. replace(LAND2017, Tref=..., ca50=..., ...)
 MARGARA_RETUNED = replace(LAND2017)
-REGISTRY = {"land2017": LAND2017, "xin_retuned": XIN_RETUNED, "margara_retuned": MARGARA_RETUNED }
+REGISTRY = {"land2017": LAND2017, "xin_retuned": XIN_RETUNED} #, "margara_retuned": MARGARA_RETUNED }
